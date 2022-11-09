@@ -52,6 +52,8 @@ func main() {
 	})
 	r.Get("/mailstest", handler.MockMailGet(feed))
 	r.Post("/mailstest", handler.MockMailPost(feed))
+	r.Post("/generate", handler.GenerateMailPost())
+	r.Post("/search", handler.SearchMailPost())
 
 	fmt.Println("Servidor en el " + port)
 	http.ListenAndServe(port, r)

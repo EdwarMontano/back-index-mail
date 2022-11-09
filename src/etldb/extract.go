@@ -74,7 +74,7 @@ func clearPath(linea string) string {
 }
 func readFileLine() {
 	fmt.Println("******** Empezó lectura de filePath.TXT ********")
-	archivo, error := os.Open("./output/filepath.txt")
+	archivo, error := os.Open("/home/chocoplot/Documents/codeLAB/IndexMail_GoVue/back-index-mail/output/filepath.txt")
 	defer archivo.Close()
 	if error != nil {
 		fmt.Println("Hubo Error")
@@ -95,7 +95,7 @@ func readFileLine() {
 		if i == 1 {
 			// fmt.Println("Hola se creo NDJSON")
 
-			_, err := os.Create("output_Data/EnronMail.ndjson")
+			_, err := os.Create("/home/chocoplot/Documents/codeLAB/IndexMail_GoVue/back-index-mail/output/EnronMail.ndjson")
 
 			if err != nil {
 				fmt.Println(err)
@@ -119,16 +119,17 @@ func InfoExtract(file string) {
 	fmt.Println(file)
 }
 
-func ExtractData() {
-	var numSelect int
+func ExtractData(numSelect string) {
+	// var numSelect int
 	fmt.Println("--->Empezó a extraerse la DATA")
 	fmt.Printf("1. Desea generar el .TXT con las rutas de los archivos.\n2. Ya tiene el .TXT con las rutas.\n")
 	fmt.Print("Escriba un número con la opción: ")
-	fmt.Scanln(&numSelect)
+	fmt.Print(numSelect)
+	// fmt.Scanln(&numSelect)
 	switch numSelect {
-	case 1:
+	case "1":
 		filePathDB()
-	case 2:
+	case "2":
 		fmt.Println("continuo...")
 		readFileLine()
 	}

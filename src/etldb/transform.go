@@ -150,7 +150,7 @@ func TransformData(corpusMail, ruta string, i uint32) {
 	porcentaje = (float32(100) / float32(517426)) * float32(i)
 	porcentajeString := fmt.Sprintf("%.3f", porcentaje)
 	fmt.Println("Transformado..", porcentajeString, "% ", ruta)
-	f, err := os.OpenFile("output_Data/EnronMail.ndjson", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile("/home/chocoplot/Documents/codeLAB/IndexMail_GoVue/back-index-mail/output/EnronMail.ndjson", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
