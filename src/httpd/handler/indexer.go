@@ -1,10 +1,11 @@
-package lesson
+package handler
 
 import (
-	"CursoPlatzi/src/lesson/etldb"
 	"fmt"
 	"log"
 	"time"
+
+	"github.com/EdwarMontano/back-index-mail/src/etldb"
 )
 
 func runningtime(s string) (string, time.Time) {

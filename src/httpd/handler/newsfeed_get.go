@@ -1,12 +1,13 @@
 package handler
 
 import (
-	"chi-example/platform/newsfeed"
 	"encoding/json"
 	"net/http"
+
+	"github.com/EdwarMontano/back-index-mail/src/platform/enronmail"
 )
 
-func NewsfeedGet(feed newsfeed.Getter) http.HandlerFunc {
+func MockMailGet(feed enronmail.Getter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		items := feed.GetAll()
 		json.NewEncoder(w).Encode(items)
