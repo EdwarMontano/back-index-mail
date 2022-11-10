@@ -9,7 +9,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/EdwarMontano/back-index-mail/src/platform/model"
+	"github.com/EdwarMontano/back-index-mail/src/models"
+	// "github.com/EdwarMontano/back-index-mail/src/httpd/model"
 )
 
 func SearchMailPost() http.HandlerFunc {
@@ -18,7 +19,7 @@ func SearchMailPost() http.HandlerFunc {
 		// json.NewDecoder(r.Body).Decode(&request)
 		// find := request["word"]
 		// fmt.Println(find)
-		search_post()
+		busquedad, _ := search_post()
 		/////////
 
 		// rta := search_post()
@@ -29,7 +30,7 @@ func SearchMailPost() http.HandlerFunc {
 		// 	fmt.Fprintf(w, "error: %v", err)
 		// 	return
 		// }
-		// fmt.Println(result.Took)
+
 		// fmt.Fprintf(w, "payload: %v \n", result)
 
 		/////////
@@ -41,11 +42,12 @@ func SearchMailPost() http.HandlerFunc {
 		// 	return
 		// }
 		// fmt.Fprintf(w, "payload: %v \n", metadata)
-		w.Write([]byte("Busqueda exitosa!"))
+		json.NewEncoder(w).Encode(busquedad)
+		// w.Write([]byte())
 	}
 }
 
-func search_post() http.HandlerFunc {
+func search_post() (results []models.Mail, err error) {
 	query := `{
         "search_type": "match",
         "query":
@@ -76,16 +78,48 @@ func search_post() http.HandlerFunc {
 	if err != nil {
 		log.Fatal(err)
 	}
+	// fmt.Println(string(body))
 	fmt.Println(string(body))
-	fmt.Println(reflect.TypeOf(body))
+	// fmt.Println(reflect.TypeOf(body))
 	fmt.Println(reflect.TypeOf(resp.Body))
-
-	var resultados []model.ResultZincSearch
-	json.Unmarshal(body, &model.ResultZincSearch)
-
-	for _, resultado := range resultados {
-		fmt.Println(resultado.Took)
+	fmt.Println(resp.StatusCode)
+	byt := []byte(body)
+	var eRes map[string]interface{}
+	if err := json.Unmarshal(byt, &eRes); err != nil {
+		panic(err)
 	}
+	fmt.Println(eRes)
+	num := eRes["took"].(float64)
+	fmt.Println(num)
+
+	var mails []models.Mail
+	for _, hit := range eRes["hits"].(map[string]interface{})["hits"].([]interface{}) {
+		fmt.Println("HI ALIENS")
+		mail := models.Mail{}
+		source := hit.(map[string]interface{})["_source"]
+		marshal, err := json.Marshal(source)
+		if err != nil {
+			return nil, err
+		}
+		if err := json.Unmarshal(marshal, &mail); err == nil {
+			// fmt.Println(mail.To)
+			mails = append(mails, mail)
+		}
+		fmt.Println(mail.To)
+	}
+	return mails, nil
+
+	// var eRes map[string]interface{}
+	// if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
+	// 	return nil, err
+	// }
+
+	// var resultados []model.ResultZincSearch
+	// json.Unmarshal(body, &model.ResultZincSearch)
+
+	// for _, resultado := range resultados {
+	// 	fmt.Println(resultado.Took)
+	// }
 
 	// json.NewDecoder(resp.Body).Decode(&ResultZincSearch)
 	// fmt.Println(string(ResultZincSearch["hits"]))
@@ -93,5 +127,4 @@ func search_post() http.HandlerFunc {
 	// for i := range body["hits"]["hits"] {
 	// 	fmt.Println(body["hits"]["hits"][i]["_source"]["To"])
 	// }
-
 }

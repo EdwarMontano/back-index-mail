@@ -1,8 +1,12 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
+	"runtime/pprof"
 
 	"github.com/EdwarMontano/back-index-mail/src/httpd/handler"
 	"github.com/EdwarMontano/back-index-mail/src/platform/enronmail"
@@ -12,7 +16,18 @@ import (
 	"github.com/go-chi/cors"
 )
 
+var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
+
 func main() {
+	flag.Parse()
+	if *cpuprofile != "" {
+		f, err := os.Create(*cpuprofile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
+	}
 	port := ":3001"
 	feed := enronmail.New()
 	feed.Add(enronmail.Item{

@@ -20,6 +20,7 @@ type Item struct {
 	XToMsg     string `json:"XToMsg"`
 	XccMsg     string `json:"XccMsg"`
 	XbccMsg    string `json:"XbccMsg"`
+	Content    string `json:"ContentMsg"`
 }
 
 type Repo struct {
